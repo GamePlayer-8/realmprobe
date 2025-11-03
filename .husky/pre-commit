@@ -1,0 +1,1 @@
+bash -c 'source source.sh; yarn test || true; prettier . --check || true; black --check . || true; trivy fs --config trivy.yaml --include-dev-deps . || true'

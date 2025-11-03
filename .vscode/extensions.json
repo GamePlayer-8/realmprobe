@@ -1,0 +1,11 @@
+{
+	"recommendations": [
+		"appulate.filewatcher",
+		"aquasecurityofficial.trivy-vulnerability-scanner",
+		"esbenp.prettier-vscode",
+		"redhat.vscode-yaml",
+		"ms-python.pylint",
+		"theumletteam.umlet",
+		"timonwong.shellcheck"
+	]
+}

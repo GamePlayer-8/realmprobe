@@ -1,0 +1,33 @@
+version: "2"
+scan:
+    skip-dirs:
+        - nvm
+        - dist
+        - build
+        - pylint
+        - trivy
+
+    skip-files:
+        - "*.backup"
+        - "*.swp"
+        - ".env"
+        - ".env.local"
+        - ".env.production.local"
+        - "npm-debug.log*"
+        - "yarn-debug.log*"
+        - "yarn-error.log*"
+        - ".DS_Store"
+        - "package-dev.json"
+
+    offline-scan: false
+
+scanners:
+    - vuln
+    - config
+
+severity:
+    - UNKNOWN
+    - LOW
+    - MEDIUM
+    - HIGH
+    - CRITICAL

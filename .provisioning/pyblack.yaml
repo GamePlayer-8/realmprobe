@@ -1,0 +1,16 @@
+# pyblack.yaml
+
+when:
+    branch: [main, dev, develop-*]
+    event: [pull_request, manual]
+
+depends_on: [build-sdk]
+
+runs_on: [success, failure]
+
+steps:
+    test:
+        image: "${CI_FORGE_URL#https://}/${CI_REPO_OWNER,,}/${CI_REPO_NAME}-sdk:${CI_COMMIT_BRANCH}"
+        commands:
+            - if [ "${CI_FORGE_URL#https://}" = "forgejo.xvm" ]; then apt-mark hold ca-certificates; fi # Workaround for shared certificates for forgejo.xvm domain
+            - bash -c 'export __ORIGIN="$(pwd)"; cd /sdk; . ./sdk-source; cd "$__ORIGIN"; unset __ORIGIN; black --check .'

@@ -1,0 +1,56 @@
+name: Vanilla template
+about: A default template for pull request. Will be reviewed.
+title: "WIP: "
+ref: "main"
+labels:
+    - "needs revision"
+reviewers:
+    - "GamePlayer-8"
+#milestones:
+#  - 'Third Party'
+body:
+    - type: input
+      id: contact
+      attributes:
+          label: Contact Details
+          description: How can we get in touch with you if we need more info?
+          placeholder: ex. email@example.com
+      validations:
+          required: false
+    - type: textarea
+      id: brief-description
+      attributes:
+          label: What is the pull request about?
+          description: Describe briefly what does your pull request changes, adds or fixes.
+          placeholder: My pull request adds...
+      validations:
+          required: true
+    - type: checkboxes
+      id: terms
+      attributes:
+          label: Code of Conduct
+          description: By submitting this pull request, you agree to follow the Code of Conduct.
+          options:
+              - label: I agree to follow this repository's Code of Conduct
+                required: true
+              - label: I agree to use Apache 2.0 License as a source code license for the essential parts of the repository
+                required: true
+              - label: I understood that any sort of harassment is unwelcome in this repository
+                required: true
+    - type: checkboxes
+      id: misc
+      attributes:
+          label: Miscellaneous
+          description: Meta informations to fill out.
+          options:
+              - label: I have searched for any other type of pull request what is not providing the same as what I do
+                required: true
+    - type: input
+      id: captcha
+      attributes:
+          label: Captcha
+          description: What's the double square root of meow?
+          placeholder: answer
+      validations:
+          required: true
+          regex: "^(meow|mraw|maow|nya|mew|maw|mrew|mraw)$"

@@ -1,0 +1,45 @@
+# build-sdk.yaml
+
+when:
+    branch: [main, dev, develop-*]
+    event: [push, pull_request, manual, cron]
+    cron: build_sdk
+
+steps:
+    main:
+        when:
+            path:
+                include:
+                    - .woodpecker/build-sdk.yaml
+                    - Dockerfile.sdk
+                    - autogen.sh
+                    - source.sh
+        image: codeberg.org/gameplayer-8/gitio
+
+        commands:
+            - cp Dockerfile.sdk Dockerfile
+            - export CONTAINER_TAGGING="$(basename "${CI_COMMIT_BRANCH}")"
+            - gitio container OUTPUT_IMAGE_NAME:${CI_REPO_NAME}-sdk:"$CONTAINER_TAGGING"
+
+        environment:
+            SYSTEM_TOKEN_PASSWD:
+                from_secret: SYSTEM_TOKEN_PASSWD
+
+    mainProd:
+        when:
+            path:
+                include:
+                    - .woodpecker/build-sdk.yaml
+                    - Dockerfile.sdk
+                    - autogen.sh
+                    - source.sh
+        image: codeberg.org/gameplayer-8/gitio
+
+        commands:
+            - cp Dockerfile.sdk Dockerfile
+            - export CONTAINER_TAGGING="$(basename "${CI_COMMIT_BRANCH}")"
+            - if [ "$CONTAINER_TAGGING" = "main" ]; then gitio container OUTPUT_IMAGE_NAME:${CI_REPO_NAME}-sdk:latest; fi
+
+        environment:
+            SYSTEM_TOKEN_PASSWD:
+                from_secret: SYSTEM_TOKEN_PASSWD

@@ -1,0 +1,39 @@
+# Environment variables
+.env
+.env.local
+.env.production.local
+
+# Build outputs
+build/
+dist/
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# OS-specific files
+.DS_Store
+
+# Backups and Swaps
+*.backup
+*.swp
+
+# NodeJS
+## Dependencies
+node_modules/
+## NodeConfig
+package.json
+## NVM
+nvm/
+## Yarn
+yarn.lock
+
+# Python
+pylint/
+
+# Trivy
+trivy/
+
+# Husky
+.husky/_/

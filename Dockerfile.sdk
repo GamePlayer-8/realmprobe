@@ -1,0 +1,20 @@
+FROM debian:13-slim AS runtime
+
+ENV TZ=UTC
+ENV DEBIAN_FRONTEND=noninteractive
+
+RUN apt-get update; \
+    apt-get install -o Dpkg::Options::="--force-confnew" -y curl wget git openssl python3-venv python3-pip; \
+    apt-get clean; \
+    mkdir /sdk
+
+WORKDIR /sdk
+COPY --chmod=755 autogen.sh /sdk/sdk-autogen
+COPY --chmod=755 source.sh /sdk/sdk-source
+COPY package.json /sdk/package.json
+COPY yarn.lock /sdk/yarn.lock
+COPY requirements.txt /sdk/requirements.txt
+COPY trivy.yaml /sdk/trivy.yaml
+
+RUN rm -f /etc/alpine-release; \
+    /sdk/sdk-autogen

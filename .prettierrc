@@ -1,0 +1,14 @@
+{
+	"plugins": ["prettier-plugin-sh"],
+	"tabWidth": 4,
+	"useTabs": true,
+	"overrides": [
+		{
+			"files": "*.sh",
+			"options": {
+				"binaryNextLine": true,
+				"spaceRedirects": true
+			}
+		}
+	]
+}

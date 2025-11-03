@@ -1,0 +1,18 @@
+{
+	// Prettier
+	"editor.formatOnSave": false,
+	"filewatcher.commands": [
+		{
+			"match": "\\.(?!py$)[^.]*",
+			"cmd": "bash ${workspaceRoot}/.vscode/prettier.sh ${file}",
+			"event": "onFileChange"
+		},
+		{
+			"match": "\\.py",
+			"cmd": "bash -c 'cd ${workspaceRoot}; source source.sh; black ${file}; pylint ${file}'",
+			"event": "onFileChange"
+		}
+	],
+	// Trivy
+	"trivy.configFilePath": "trivy.yaml"
+}

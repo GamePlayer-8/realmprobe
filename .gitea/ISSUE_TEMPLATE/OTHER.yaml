@@ -1,0 +1,42 @@
+name: Other
+about: Template for questions and such.
+#title: "[General] "
+#labels: ''
+#milestones:
+#  - 'Third Party'
+assignees: ["GamePlayer-8"]
+body:
+    - type: checkboxes
+      id: terms
+      attributes:
+          label: Code of Conduct
+          description: By submitting this report, you agree to follow the Code of Conduct
+          options:
+              - label: I agree to follow this repository's Code of Conduct
+                required: true
+              - label: I understood that any sort of harassment is unwelcome in this repository
+                required: true
+    - type: checkboxes
+      id: misc
+      attributes:
+          label: Miscellaneous
+          description: Meta informations to fill out.
+          options:
+              - label: I have searched for reports similar to the current one and this is not a duplicate
+                required: true
+    - type: input
+      id: captcha
+      attributes:
+          label: Captcha
+          description: What's the double square root of meow?
+          placeholder: answer
+      validations:
+          required: true
+          regex: "^(meow|mraw|maow|nya|mew|maw|mrew|mraw)$"
+    - type: textarea
+      id: description
+      attributes:
+          label: Decription
+          description: Description of the issue.
+      validations:
+          required: true
