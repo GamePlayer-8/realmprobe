@@ -1,0 +1,8 @@
+FROM alpine:3.22 AS runtime
+
+RUN apk add --no-cache coreutils curl lscpu speedtest-cli sysbench
+
+COPY --chmod=755 probe.sh /usr/local/bin/probe
+COPY modules /usr/local/bin/modules
+
+CMD ["/bin/sh", "-c", "/usr/local/bin/probe"]

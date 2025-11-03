@@ -1,0 +1,18 @@
+# probe.yaml
+
+when:
+    branch: [main, dev, develop-*]
+    event: [manual, cron]
+    cron: "probe"
+
+depends_on: [build-probe]
+
+runs_on: [success, failure]
+
+skip_clone: true
+
+steps:
+    probe:
+        image: "${CI_FORGE_URL#https://}/${CI_REPO_OWNER,,}/${CI_REPO_NAME}-probe:${CI_COMMIT_BRANCH}"
+        commands:
+            - /usr/local/bin/probe

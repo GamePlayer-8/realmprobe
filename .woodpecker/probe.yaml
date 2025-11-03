@@ -1,0 +1,14 @@
+# probe.yaml
+
+when:
+    branch: [main, dev, develop-*]
+    event: [manual, cron]
+    cron: "probe"
+
+skip_clone: true
+
+steps:
+    probe:
+        image: docker.io/gameplayer8/probe
+        commands:
+            - /usr/local/bin/probe

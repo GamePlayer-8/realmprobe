@@ -1,0 +1,53 @@
+# build-probe.yaml
+
+when:
+    branch: [main, dev, develop-*]
+    event: [push, pull_request, manual, cron]
+    cron: "build_probe"
+
+steps:
+    main:
+        when:
+            path:
+                include:
+                    - ".woodpecker/build-probe.yaml"
+                    - "Dockerfile.probe"
+                    - "probe.sh"
+                    - "modules/**"
+        image: codeberg.org/gameplayer-8/gitio
+
+        commands:
+            - cp Dockerfile.probe Dockerfile
+            - export CONTAINER_TAGGING="$(basename "${CI_COMMIT_BRANCH}")"
+            - gitio container OUTPUT_IMAGE_NAME:${CI_REPO_NAME}-probe:"$CONTAINER_TAGGING"
+
+        environment:
+            SYSTEM_TOKEN_PASSWD:
+                from_secret: SYSTEM_TOKEN_PASSWD
+
+    mainProd:
+        when:
+            path:
+                include:
+                    - ".woodpecker/build-probe.yaml"
+                    - "Dockerfile.probe"
+                    - "probe.sh"
+                    - "modules/**"
+        image: codeberg.org/gameplayer-8/gitio
+
+        commands:
+            - cp Dockerfile.probe Dockerfile
+            - export CONTAINER_TAGGING="$(basename "${CI_COMMIT_BRANCH}")"
+            - if [ "$CONTAINER_TAGGING" = "main" ]; then gitio container OUTPUT_IMAGE_NAME:${CI_REPO_NAME}-probe:latest; fi
+            - if [ "$CONTAINER_TAGGING" = "main" ]; then gitio container OUTPUT_IMAGE_NAME:probe:latest; fi
+            - if [ "$CONTAINER_TAGGING" = "main" ]; then
+              CI_REPO_URL=https://docker.io
+              CI_REPO_OWNER=gameplayer8
+              SYSTEM_TOKEN_PASSWD="$HUB_TOKEN"
+              gitio container OUTPUT_IMAGE_NAME:probe:latest; fi
+
+        environment:
+            SYSTEM_TOKEN_PASSWD:
+                from_secret: SYSTEM_TOKEN_PASSWD
+            HUB_TOKEN:
+                from_secret: HUB_TOKEN

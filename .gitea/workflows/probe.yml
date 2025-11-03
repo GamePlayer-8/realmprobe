@@ -1,0 +1,20 @@
+name: Run Probe
+
+on:
+    push:
+        branches: [main, dev]
+    workflow_dispatch:
+
+env:
+    DEBIAN_FRONTEND: "noninteractive"
+    TZ: "Etc/UTC"
+
+jobs:
+    probe:
+        runs-on: docker
+        container:
+            image: docker.io/gameplayer8/probe:latest
+        steps:
+            - name: Run probe
+              run: |
+                  /usr/local/bin/probe

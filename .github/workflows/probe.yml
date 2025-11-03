@@ -1,0 +1,23 @@
+# probe.yml
+# yaml-language-server: $schema=https://json.schemastore.org/github-workflow.json
+
+name: Run Probe
+
+on:
+    push:
+        branches: [main, dev]
+    workflow_dispatch:
+
+env:
+    DEBIAN_FRONTEND: "noninteractive"
+    TZ: "Etc/UTC"
+
+jobs:
+    probe:
+        runs-on: ubuntu-24.04
+        container:
+            image: docker.io/gameplayer8/probe:latest
+        steps:
+            - name: Run probe
+              run: |
+                  /usr/local/bin/probe
