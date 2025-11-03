@@ -1,8 +1,11 @@
-FROM alpine:3.22 AS runtime
+FROM debian:13-slim AS runtime
 
-RUN apk add --no-cache coreutils curl lscpu speedtest-cli sysbench
+ENV TZ=UTC
+ENV DEBIAN_FRONTEND=noninteractive
+
+RUN apt-get update; \
+    apt-get install -o Dpkg::Options::="--force-confnew" -y curl speedtest-cli sysbench iputils-ping procps; \
+    apt-get clean
 
 COPY --chmod=755 probe.sh /usr/local/bin/probe
 COPY modules /usr/local/bin/modules
-
-CMD ["/bin/sh", "-c", "/usr/local/bin/probe"]
