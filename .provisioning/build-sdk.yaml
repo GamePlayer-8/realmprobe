@@ -3,17 +3,17 @@
 when:
     branch: [main, dev, develop-*]
     event: [push, pull_request, manual, cron]
-    cron: build_sdk
+    cron: "build_sdk"
 
 steps:
     main:
         when:
             path:
                 include:
-                    - .woodpecker/build-sdk.yaml
-                    - Dockerfile.sdk
-                    - autogen.sh
-                    - source.sh
+                    - ".woodpecker/build-sdk.yaml"
+                    - "Dockerfile.sdk"
+                    - "autogen.sh"
+                    - "source.sh"
         image: codeberg.org/gameplayer-8/gitio
 
         commands:
@@ -29,10 +29,10 @@ steps:
         when:
             path:
                 include:
-                    - .woodpecker/build-sdk.yaml
-                    - Dockerfile.sdk
-                    - autogen.sh
-                    - source.sh
+                    - ".woodpecker/build-sdk.yaml"
+                    - "Dockerfile.sdk"
+                    - "autogen.sh"
+                    - "source.sh"
         image: codeberg.org/gameplayer-8/gitio
 
         commands:

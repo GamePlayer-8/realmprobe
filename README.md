@@ -35,7 +35,7 @@ Lurk for the latest "Green tick" next to repo commits, would point the status of
 
 > [!IMPORTANT]
 > In the `.provisioning` directory there are Woodpecker CI/CD configuration files for building OCI images, both being shipped on local git instance and Docker Hub.
-> What's being executed on probed instances is in `.woodpecker`,`.forgejo/workflows`,`.gitea/workflows`,`.github/workflows`,`.gitlab/workflows`.
+> What's being executed on probed instances is in `.woodpecker`,`.forgejo/workflows`,`.gitea/workflows`,`.github/workflows`,`.gitlab-ci.yml`.
 
 # Development
 

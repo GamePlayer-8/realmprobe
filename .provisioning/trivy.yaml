@@ -3,7 +3,7 @@
 when:
     branch: [main, dev, develop-*]
     event: [pull_request, manual, cron]
-    cron: trivy
+    cron: "trivy"
 
 depends_on: [build-sdk]
 
