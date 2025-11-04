@@ -1,12 +1,23 @@
-# build-probe.yaml
+# Build and publish Docker images for multiple architectures.
+#
+# Pushing an image to codeberg's container registry
+# The package owner will be the repo owner.
+#
+# This config also shows usage of yaml aliases and
+# was taken from https://codeberg.org/6543/docker-images/src/commit/37e29c227717c1c07d2776cddcf14725bf952875/.woodpecker/hello.yml
 
 when:
     branch: [main, dev, develop-*]
     event: [push, pull_request, manual, cron]
     cron: "build_probe"
 
+variables:
+    - &context "."
+    - &file "Dockerfile.probe"
+    - &repo "${CI_FORGE_URL#https://}/${CI_REPO_OWNER,,}/${CI_REPO_NAME}-probe"
+
 steps:
-    main:
+    dryrun:
         when:
             path:
                 include:
@@ -14,18 +25,19 @@ steps:
                     - "Dockerfile.probe"
                     - "probe.sh"
                     - "modules/**"
-        image: codeberg.org/gameplayer-8/gitio
+        image: woodpeckerci/plugin-docker-buildx
+        settings:
+            context: *context
+            dockerfile: *file
+            platforms: linux/amd64
+            dry_run: true
+            repo: *repo
+            tags: latest
+        # when:
+        #   event: pull_request
+        #   path: *file
 
-        commands:
-            - cp Dockerfile.probe Dockerfile
-            - export CONTAINER_TAGGING="$(basename "${CI_COMMIT_BRANCH}")"
-            - gitio container OUTPUT_IMAGE_NAME:${CI_REPO_NAME}-probe:"$CONTAINER_TAGGING"
-
-        environment:
-            SYSTEM_TOKEN_PASSWD:
-                from_secret: SYSTEM_TOKEN_PASSWD
-
-    mainProd:
+    publish:
         when:
             path:
                 include:
@@ -33,21 +45,77 @@ steps:
                     - "Dockerfile.probe"
                     - "probe.sh"
                     - "modules/**"
-        image: codeberg.org/gameplayer-8/gitio
+        image: woodpeckerci/plugin-docker-buildx
+        settings:
+            ipv6: true
+            context: *context
+            dockerfile: *file
+            platforms: linux/amd64
+            repo: *repo
+            registry: ${CI_FORGE_URL#https://}
+            tags:
+                - latest
+                - ${CI_COMMIT_BRANCH}
+                - ${CI_COMMIT_SHA}
+            username: ${CI_REPO_OWNER,,}
+            password:
+                from_secret: OCI_TOKEN
+        # when:
+        #   event: push
+        #   path: *file
 
-        commands:
-            - cp Dockerfile.probe Dockerfile
-            - export CONTAINER_TAGGING="$(basename "${CI_COMMIT_BRANCH}")"
-            - if [ "$CONTAINER_TAGGING" = "main" ]; then gitio container OUTPUT_IMAGE_NAME:${CI_REPO_NAME}-probe:latest; fi
-            - if [ "$CONTAINER_TAGGING" = "main" ]; then gitio container OUTPUT_IMAGE_NAME:probe:latest; fi
-            - if [ "$CONTAINER_TAGGING" = "main" ]; then
-              CI_REPO_URL=https://docker.io
-              CI_REPO_OWNER=gameplayer8
-              SYSTEM_TOKEN_PASSWD="$HUB_TOKEN"
-              gitio container OUTPUT_IMAGE_NAME:probe:latest; fi
+    publishProd:
+        when:
+            branch: [main]
+            path:
+                include:
+                    - ".woodpecker/build-probe.yaml"
+                    - "Dockerfile.probe"
+                    - "probe.sh"
+                    - "modules/**"
+        image: woodpeckerci/plugin-docker-buildx
+        settings:
+            ipv6: true
+            context: *context
+            dockerfile: *file
+            platforms: linux/amd64
+            repo: "${CI_FORGE_URL#https://}/${CI_REPO_OWNER,,}/probe"
+            registry: ${CI_FORGE_URL#https://}
+            tags:
+                - latest
+                - ${CI_COMMIT_BRANCH}
+                - ${CI_COMMIT_SHA}
+            username: ${CI_REPO_OWNER,,}
+            password:
+                from_secret: OCI_TOKEN
+        # when:
+        #   event: push
+        #   path: *file
 
-        environment:
-            SYSTEM_TOKEN_PASSWD:
-                from_secret: SYSTEM_TOKEN_PASSWD
-            HUB_TOKEN:
+    dockerHub:
+        when:
+            branch: [main]
+            path:
+                include:
+                    - ".woodpecker/build-probe.yaml"
+                    - "Dockerfile.probe"
+                    - "probe.sh"
+                    - "modules/**"
+        image: woodpeckerci/plugin-docker-buildx
+        settings:
+            ipv6: true
+            context: *context
+            dockerfile: *file
+            platforms: linux/amd64
+            repo: "docker.io/gameplayer8/probe"
+            registry: "docker.io"
+            tags:
+                - latest
+                - ${CI_COMMIT_BRANCH}
+                - ${CI_COMMIT_SHA}
+            username: gameplayer8
+            password:
                 from_secret: HUB_TOKEN
+        # when:
+        #   event: push
+        #   path: *file
