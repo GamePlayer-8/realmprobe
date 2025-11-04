@@ -4,7 +4,7 @@ ENV TZ=UTC
 ENV DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update; \
-    apt-get install -o Dpkg::Options::="--force-confnew" -y curl speedtest-cli sysbench iputils-ping procps; \
+    apt-get install -o Dpkg::Options::="--force-confnew" -y curl librespeed-cli speedtest-cli sysbench iputils-ping procps; \
     apt-get clean
 
 COPY --chmod=755 probe.sh /usr/local/bin/probe

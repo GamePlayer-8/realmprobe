@@ -60,6 +60,9 @@ df -ah 2>&1 | sed -e "s/^/\[$(date)\] /g"
 curl -sL4 ifconfig.me | sed -e "s/^/\[$(date)\] IPv4: /g" | sed -e 's/$/\n/g'
 curl -sL6 ifconfig.me | sed -e "s/^/\[$(date)\] IPv6: /g" | sed -e 's/$/\n/g'
 ping -c 5 "$(echo "${CI_FORGE_URL:-example.com}" | cut -f 3 -d '/')" | sed -e "s/^/\[$(date)\] /g"
+printq 'INFO' "Librespeed: "
+librespeed-cli --simple 2>&1 | sed -e "s/^/\[$(date)\] /g"
+printq 'INFO' "Speedtest: "
 speedtest-cli | grep -E '^Testing from |^Hosted by |^Download: |^Upload: ' | sed -e "s/^/\[$(date)\] /g"
 printq 'TEST' "Testing ping to Infra node!"
 ping -c 5 mrrp.es | sed -e "s/^/\[$(date)\] /g"
